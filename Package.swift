@@ -3,15 +3,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "VaporLogging",
+    name: "MultiLogging",
     products: [
-        .library(name: "VaporLogging", targets: ["VaporLogging"])
+        .library(name: "MultiLogging", targets: ["MultiLogging"])
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.5")
     ],
     targets: [
-      .target(name: "VaporLogging", dependencies: ["Vapor"]),
-      .target(name: "LoggingExample", dependencies: ["VaporLogging"])
+      .target(name: "MultiLogging", dependencies: ["Vapor"]),
+      .target(name: "LoggingExample", dependencies: ["MultiLogging"])
     ]
 )

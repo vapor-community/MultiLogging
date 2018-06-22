@@ -1,4 +1,4 @@
-import VaporLogging
+import MultiLogging
 import Vapor
 
 /// Creates an instance of Application. This is called from main.swift in the run target.

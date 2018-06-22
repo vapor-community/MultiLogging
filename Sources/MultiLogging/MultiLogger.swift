@@ -7,7 +7,7 @@ public enum LoggerType {
 /// Takes all arguments to a log call and returns a bool indicating wether or not to filter the message
 public typealias LoggerFilter = ((String, LogLevel, String, String, UInt, UInt) -> Bool)
 
-public struct VaporLoggingConfig: Service {
+public struct MultiLoggerConfig: Service {
     var types: [LoggerType]
     
     public init(types: [LoggerType]) {
@@ -15,7 +15,7 @@ public struct VaporLoggingConfig: Service {
     }
 }
 
-public class VaporLogger: ServiceType, Logger {
+public class MultiLogger: ServiceType, Logger {
     init(_ loggers: [Logger]) {
         self.loggers = loggers
     }
