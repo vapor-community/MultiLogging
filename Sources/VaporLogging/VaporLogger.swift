@@ -1,8 +1,11 @@
 import Vapor
 
 public enum LoggerType {
-    case File, Discord, Slack, Default
+    case file, discord, slack, console
 }
+
+/// Takes all arguments to a log call and returns a bool indicating wether or not to log the message
+public typealias LoggerFilter = ((String, LogLevel, String, String, UInt, UInt) -> Bool)
 
 public struct VaporLoggingConfig: Service {
     var types: [LoggerType]
