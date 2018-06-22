@@ -9,7 +9,7 @@ MultiLogging is a Vapor 3 utility package for logging. It allows you to log to f
 ## Installation
 MultiLogging can be installed using SPM
 ```swift
-.package(url: "https://github.com/MrLotU/MultiLogging.git", from: "0.0.1")
+.package(url: "https://github.com/vapor-community/MultiLogging.git", from: "0.0.1")
 ```
 
 ## Usage
