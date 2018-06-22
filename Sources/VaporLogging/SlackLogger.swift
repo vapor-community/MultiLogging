@@ -20,7 +20,7 @@ public struct SlackLoggerConfig: Service {
     /// If not using embeds, message format to use
     var messageFormat: String
     
-    /// Creates a new DiscordLoggerConfig
+    /// Creates a new SlackLoggerConfig
     ///
     /// - parameters:
     ///     - prodURL: URL to post to in Production env
