@@ -22,6 +22,13 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let router = EngineRouter.default()
     try routes(router)
     services.register(router, as: Router.self)
+    
+    try services.register(DiscordLoggerConfig(prodURL: "DiscordTokenGoesHere", useEmbeds: true))
+    services.register(DiscordLogger.self)
+    
+    services.register(VaporLoggingConfig(types: [.discord, .console]))
+    services.register(VaporLogger.self)
+    config.prefer(VaporLogger.self, for: Logger.self)
 }
 
 public func routes(_ router: Router) throws {
