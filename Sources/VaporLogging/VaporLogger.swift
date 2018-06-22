@@ -9,6 +9,10 @@ public typealias LoggerFilter = ((String, LogLevel, String, String, UInt, UInt) 
 
 public struct VaporLoggingConfig: Service {
     var types: [LoggerType]
+    
+    public init(types: [LoggerType]) {
+        self.types = types
+    }
 }
 
 public class VaporLogger: ServiceType, Logger {
@@ -22,10 +26,21 @@ public class VaporLogger: ServiceType, Logger {
         self.loggers.forEach { $0.log(string, at: level, file: file, function: function, line: line, column: column) }
     }
     
+    public static var serviceSupports: [Any.Type] {
+        return [Logger.self]
+    }
+
     public static func makeService(for worker: Container) throws -> Self {
-        var config = try worker.make(VaporLoggingConfig.self)
-        // TODO: IMPLEMENT
-        let logger = try worker.make(ConsoleLogger.self)
-        return .init([logger])
+        let config = try worker.make(VaporLoggingConfig.self)
+        var loggers: [Logger] = []
+        for type in config.types {
+            switch type {
+            case .file: try loggers.append(worker.make(FileLogger.self))
+            case .discord: try loggers.append(worker.make(DiscordLogger.self))
+            case .slack: try loggers.append(worker.make(SlackLogger.self))
+            case .console: try loggers.append(worker.make(ConsoleLogger.self))
+            }
+        }
+        return .init(loggers)
     }
 }

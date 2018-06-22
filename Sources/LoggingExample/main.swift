@@ -14,8 +14,8 @@ public func app(_ env: Environment) throws -> Application {
 
 /// Called after your application has initialized.
 public func boot(_ app: Application) throws {
-//    try app.make(Logger.self).info("Startup success")
-//    try app.make(Logger.self).info("Filtered success")
+    try app.make(Logger.self).info("Startup success")
+    try app.make(Logger.self).info("Filtered success")
 }
 
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
