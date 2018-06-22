@@ -21,6 +21,18 @@ extension LogLevel {
             return 7506394
         }
     }
+    var hexColor: String {
+        switch self {
+        case .info:
+            return "77dd77"
+        case .error, .fatal:
+            return "ff6961"
+        case .warning:
+            return "ffb347"
+        default:
+            return ""
+        }
+    }
 }
 
 extension Formatter {

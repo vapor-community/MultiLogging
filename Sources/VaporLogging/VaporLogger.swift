@@ -4,7 +4,7 @@ public enum LoggerType {
     case file, discord, slack, console
 }
 
-/// Takes all arguments to a log call and returns a bool indicating wether or not to log the message
+/// Takes all arguments to a log call and returns a bool indicating wether or not to filter the message
 public typealias LoggerFilter = ((String, LogLevel, String, String, UInt, UInt) -> Bool)
 
 public struct VaporLoggingConfig: Service {

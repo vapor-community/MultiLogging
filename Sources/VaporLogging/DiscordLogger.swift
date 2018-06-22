@@ -97,12 +97,11 @@ public class DiscordLogger: ServiceType, Logger {
         var description: String
         var color: Int
         var fields: [Field]
-        var footer: Footer
     }
     
     public func createPayload(_ message: String, at level: LogLevel, file: String, function: String, line: UInt, column: UInt) throws -> DiscordPayload {
         if self.config.useEmbeds {
-            let payload = DiscordPayload(embeds: [DiscordEmbed(title: "[ \(level.description) ]", timestamp: Date().iso8601, description: message, color: level.color, fields: [DiscordEmbed.Field(name: "File", value: "\(file.split(separator: "/").last!):\(line)", inline: false), DiscordEmbed.Field(name: "Function", value: function, inline: false)], footer: DiscordEmbed.Footer(text: "API version: "))], content: nil)
+            let payload = DiscordPayload(embeds: [DiscordEmbed(title: "[ \(level.description) ]", timestamp: Date().iso8601, description: message, color: level.color, fields: [DiscordEmbed.Field(name: "File", value: "\(file.split(separator: "/").last!):\(line)", inline: false), DiscordEmbed.Field(name: "Function", value: function, inline: false)])], content: nil)
             return payload
         } else {
             guard self.config.messageFormat != "" else {
@@ -121,13 +120,13 @@ public class DiscordLogger: ServiceType, Logger {
     
     /// See `Logger.log`
     public func log(_ string: String, at level: LogLevel, file: String, function: String, line: UInt, column: UInt) {
-        var shouldLog: Bool = false
+        var shouldFilter: Bool = false
         for filter in config.filters {
-            if filter(string, level, file, function, line, column) {
-                shouldLog = true
+            if !filter(string, level, file, function, line, column) {
+                shouldFilter = true
             }
         }
-        guard shouldLog else { return }
+        guard !shouldFilter else { return }
         _ = self.client.post(self.isRelease ? config.prodURL : config.devURL, headers: HTTPHeaders(), beforeSend: { (req) in
             try req.content.encode(self.createPayload(string, at: level, file: file, function: function, line: line, column: column))
         })
