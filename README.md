@@ -41,4 +41,4 @@ config.prefer(VaporLogger.self, for: Logger.self)
 
 ### Advanced
 
-<COMMING SOON>
+COMMING SOON
