@@ -31,7 +31,7 @@ public class MultiLogger: ServiceType, Logger {
     }
 
     public static func makeService(for worker: Container) throws -> Self {
-        let config = try worker.make(VaporLoggingConfig.self)
+        let config = try worker.make(MultiLoggerConfig.self)
         var loggers: [Logger] = []
         for type in config.types {
             switch type {
