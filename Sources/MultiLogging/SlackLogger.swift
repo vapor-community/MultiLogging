@@ -61,7 +61,7 @@ public class SlackLogger: ServiceType, Logger {
     let client: Client
     let isRelease: Bool
     
-    public init(_ config: SlackLoggerConfig, _ client: Client, _ isRelease: Bool) {
+    public required init(_ config: SlackLoggerConfig, _ client: Client, _ isRelease: Bool) {
         self.config = config
         self.client = client
         self.isRelease = isRelease

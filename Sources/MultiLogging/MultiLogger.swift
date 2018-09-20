@@ -16,7 +16,7 @@ public struct MultiLoggerConfig: Service {
 }
 
 public class MultiLogger: ServiceType, Logger {
-    init(_ loggers: [Logger]) {
+    required init(_ loggers: [Logger]) {
         self.loggers = loggers
     }
     

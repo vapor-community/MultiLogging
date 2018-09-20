@@ -50,7 +50,7 @@ public class FileLogger: ServiceType, Logger {
     let config: FileLoggerConfig
     let isRelease: Bool
     
-    public init(_ config: FileLoggerConfig, _ isRelease: Bool) {
+    public required init(_ config: FileLoggerConfig, _ isRelease: Bool) {
         self.config = config
         self.isRelease = isRelease
     }
