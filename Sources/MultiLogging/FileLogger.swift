@@ -78,7 +78,7 @@ public class FileLogger: ServiceType, Logger {
         guard !shouldFilter else { return }
         guard let log = URL(string: isRelease ? config.prodFile : config.devFile) else { return }
         let string = string + "\n"
-        if let handle = FileHandle(forWritingAtPath: config.devFile), let line = string.data(using: .utf8) {
+        if let handle = try? FileHandle(forWritingTo: log), let line = string.data(using: .utf8) {
             handle.seekToEndOfFile()
             handle.write(line)
             handle.closeFile()
