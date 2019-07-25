@@ -51,11 +51,14 @@ public class FileLogger: ServiceType, Logger {
     let config: FileLoggerConfig
     let isRelease: Bool
 
-    public required init(_ config: FileLoggerConfig, _ isRelease: Bool) {
+    public required init(_ config: FileLoggerConfig, _ isRelease: Bool) throws {
         self.config = config
         self.isRelease = isRelease
         let path = isRelease ? config.prodFile : config.devFile
         if !FileManager.default.fileExists(atPath: path) {
+            var dir = path.convertToPathComponents()
+            _ = dir.popLast()
+            try FileManager.default.createDirectory(atPath: dir.readable, withIntermediateDirectories: true, attributes: nil)
             FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
         }
     }
