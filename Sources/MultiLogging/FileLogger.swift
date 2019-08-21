@@ -3,6 +3,7 @@
 //  VaporLogging
 //
 //  Created by Jari Koopman on 22/06/2018.
+//  Update by Eugene Melkov on 24/07/2019.
 //
 
 import Foundation
@@ -10,14 +11,14 @@ import Vapor
 
 public struct FileLoggerConfig: Service {
     /// File to post to in PROD mode
-    var prodFile: String
+    public private(set) var prodFile: String
     /// File to post to in DEV mode
-    var devFile: String
+    public private(set) var devFile: String
     /// Filters to use when getting a log message
-    var filters: [LoggerFilter]
+    public private(set) var filters: [LoggerFilter]
     /// Format to post logs in
-    var format: String
-    
+    public private(set) var format: String
+
     /// Creates a new FileLoggerConfig
     ///
     /// - parameters:
@@ -49,20 +50,27 @@ public struct FileLoggerConfig: Service {
 public class FileLogger: ServiceType, Logger {
     let config: FileLoggerConfig
     let isRelease: Bool
-    
-    public required init(_ config: FileLoggerConfig, _ isRelease: Bool) {
+
+    public required init(_ config: FileLoggerConfig, _ isRelease: Bool) throws {
         self.config = config
         self.isRelease = isRelease
+        let path = isRelease ? config.prodFile : config.devFile
+        if !FileManager.default.fileExists(atPath: path) {
+            var dir = path.convertToPathComponents()
+            _ = dir.popLast()
+            try FileManager.default.createDirectory(atPath: dir.readable, withIntermediateDirectories: true, attributes: nil)
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+        }
     }
-    
+
     public static var serviceSupports: [Any.Type] {
         return [Logger.self]
     }
-    
+
     public static func makeService(for worker: Container) throws -> Self {
         return try .init(worker.make(), worker.environment.isRelease)
     }
-    
+
     public func log(_ string: String, at level: LogLevel, file: String, function: String, line: UInt, column: UInt) {
         var shouldFilter: Bool = false
         for filter in config.filters {
@@ -71,11 +79,11 @@ public class FileLogger: ServiceType, Logger {
             }
         }
         guard !shouldFilter else { return }
-        guard let log = URL(string: isRelease ? config.prodFile : config.prodFile) else { return }
+        guard let log = URL(string: isRelease ? config.prodFile : config.devFile) else { return }
         let string = string + "\n"
-        if let handle = try? FileHandle(forWritingTo: log) {
+        if let handle = try? FileHandle(forWritingTo: log), let line = string.data(using: .utf8) {
             handle.seekToEndOfFile()
-            handle.write(string.data(using: .utf8)!)
+            handle.write(line)
             handle.closeFile()
         } else {
             try? string.data(using: .utf8)?.write(to: log)
